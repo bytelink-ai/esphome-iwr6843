@@ -10,18 +10,22 @@ static const char *const TAG = "iwr6843";
 void IWR6843Component::setup() {
   ESP_LOGCONFIG(TAG, "Setting up IWR6843...");
 
-  // CS pin is automatically handled by SPIDevice base class
+  // Initialize SPI interface
+  this->spi_setup();
+  ESP_LOGCONFIG(TAG, "SPI interface initialized");
   
   // Initialize SOP2 pin (functional mode)
   if (this->sop2_pin_ != nullptr) {
     this->sop2_pin_->setup();
     this->sop2_pin_->digital_write(true);  // HIGH = functional mode
+    ESP_LOGCONFIG(TAG, "SOP2 pin set to functional mode (HIGH)");
   }
 
   // Initialize NRST pin
   if (this->nrst_pin_ != nullptr) {
     this->nrst_pin_->setup();
     this->nrst_pin_->digital_write(true);  // HIGH = not in reset
+    ESP_LOGCONFIG(TAG, "NRST pin initialized (HIGH)");
   }
 
   // Reset sensor to ensure clean state
