@@ -1,0 +1,431 @@
+substitutions:
+  device_name: iwr6843-radar
+  friendly_name: "IWR6843 Radar"
+
+esphome:
+  name: ${device_name}
+  platform: ESP32
+  board: esp32dev
+
+wifi:
+  ssid: "YourSSID"
+  password: "YourPassword"
+  
+  ap:
+    ssid: "${friendly_name} Fallback"
+    password: "fallback12345"
+
+captive_portal:
+
+logger:
+  level: DEBUG
+
+api:
+  encryption:
+    key: "your_api_encryption_key"
+
+ota:
+  password: "your_ota_password"
+
+# SPI Configuration
+spi:
+  clk_pin: GPIO18
+  miso_pin: GPIO19
+  mosi_pin: GPIO23
+
+# UART Configuration (for configuration commands)
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 115200
+
+# IWR6843 Radar Component
+external_components:
+  - source: github://yourusername/esphome-iwr6843
+    components: [ iwr6843 ]
+
+iwr6843:
+  spi_id: spi_bus
+  cs_pin: GPIO5
+  sop2_pin: GPIO25  # Flash mode control
+  nrst_pin: GPIO26  # Hardware reset
+  
+  # Sensor Configuration
+  ceiling_height: 290  # cm
+  max_tracks: 5
+  
+  # Tracking Boundaries (meters)
+  tracking_boundary:
+    x_max: 4.0
+    x_min: -4.0
+    y_max: 4.0
+    y_min: -4.0
+    z_max: 3.0
+    z_min: -0.5
+  
+  # Presence Boundaries (meters)
+  presence_boundary:
+    x_max: 4.0
+    x_min: -4.0
+    y_max: 4.0
+    y_min: -4.0
+    z_max: 2.5
+    z_min: 0.5
+  
+  # Tracking IDs
+  tracking_ids:
+    - id: 1
+      name: "Person 1"
+    - id: 2
+      name: "Person 2"
+    - id: 3
+      name: "Person 3"
+    - id: 4
+      name: "Person 4"
+    - id: 5
+      name: "Person 5"
+
+# Binary Sensors (Presence)
+binary_sensor:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    sensor_type: presence
+    name: "Person 1 Presence"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    sensor_type: fall
+    name: "Person 1 Fall Detection"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 2
+    sensor_type: presence
+    name: "Person 2 Presence"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 2
+    sensor_type: fall
+    name: "Person 2 Fall Detection"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 3
+    sensor_type: presence
+    name: "Person 3 Presence"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 3
+    sensor_type: fall
+    name: "Person 3 Fall Detection"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 4
+    sensor_type: presence
+    name: "Person 4 Presence"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 4
+    sensor_type: fall
+    name: "Person 4 Fall Detection"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 5
+    sensor_type: presence
+    name: "Person 5 Presence"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 5
+    sensor_type: fall
+    name: "Person 5 Fall Detection"
+
+# Sensors (Coordinates and Velocity)
+sensor:
+  # Person 1
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    coordinate_type: x
+    name: "Person 1 X Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    coordinate_type: y
+    name: "Person 1 Y Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    coordinate_type: z
+    name: "Person 1 Z Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: template
+    id: person_1_velocity
+    name: "Person 1 Velocity"
+    unit_of_measurement: "mm/s"
+    accuracy_decimals: 2
+    
+  # Person 2
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 2
+    coordinate_type: x
+    name: "Person 2 X Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 2
+    coordinate_type: y
+    name: "Person 2 Y Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 2
+    coordinate_type: z
+    name: "Person 2 Z Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: template
+    id: person_2_velocity
+    name: "Person 2 Velocity"
+    unit_of_measurement: "mm/s"
+    accuracy_decimals: 2
+    
+  # Person 3
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 3
+    coordinate_type: x
+    name: "Person 3 X Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 3
+    coordinate_type: y
+    name: "Person 3 Y Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 3
+    coordinate_type: z
+    name: "Person 3 Z Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: template
+    id: person_3_velocity
+    name: "Person 3 Velocity"
+    unit_of_measurement: "mm/s"
+    accuracy_decimals: 2
+    
+  # Person 4
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 4
+    coordinate_type: x
+    name: "Person 4 X Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 4
+    coordinate_type: y
+    name: "Person 4 Y Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 4
+    coordinate_type: z
+    name: "Person 4 Z Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: template
+    id: person_4_velocity
+    name: "Person 4 Velocity"
+    unit_of_measurement: "mm/s"
+    accuracy_decimals: 2
+    
+  # Person 5
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 5
+    coordinate_type: x
+    name: "Person 5 X Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 5
+    coordinate_type: y
+    name: "Person 5 Y Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 5
+    coordinate_type: z
+    name: "Person 5 Z Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: template
+    id: person_5_velocity
+    name: "Person 5 Velocity"
+    unit_of_measurement: "mm/s"
+    accuracy_decimals: 2
+
+# Configuration Numbers
+number:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: ceiling_height
+    name: "Ceiling Height"
+    min_value: 100
+    max_value: 500
+    step: 10
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: max_tracks
+    name: "Max Tracks"
+    min_value: 1
+    max_value: 5
+    step: 1
+    
+  # Tracking Boundaries
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: tracking_boundary_x_max
+    name: "Tracking Boundary X Max"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: tracking_boundary_x_min
+    name: "Tracking Boundary X Min"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: tracking_boundary_y_max
+    name: "Tracking Boundary Y Max"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: tracking_boundary_y_min
+    name: "Tracking Boundary Y Min"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: tracking_boundary_z_max
+    name: "Tracking Boundary Z Max"
+    min_value: -5
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: tracking_boundary_z_min
+    name: "Tracking Boundary Z Min"
+    min_value: -5
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  # Presence Boundaries
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: presence_boundary_x_max
+    name: "Presence Boundary X Max"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: presence_boundary_x_min
+    name: "Presence Boundary X Min"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: presence_boundary_y_max
+    name: "Presence Boundary Y Max"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: presence_boundary_y_min
+    name: "Presence Boundary Y Min"
+    min_value: -10
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: presence_boundary_z_max
+    name: "Presence Boundary Z Max"
+    min_value: -5
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: presence_boundary_z_min
+    name: "Presence Boundary Z Min"
+    min_value: -5
+    max_value: 10
+    step: 0.1
+    unit_of_measurement: "m"
+
+# Control Entities
+button:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    name: "Reset Sensor"
+
+switch:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    name: "Flash Mode"
+
