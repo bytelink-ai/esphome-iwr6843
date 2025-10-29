@@ -1,0 +1,136 @@
+substitutions:
+  device_name: iwr6843-radar-test
+  friendly_name: "IWR6843 Radar Test"
+
+esphome:
+  name: ${device_name}
+  platform: ESP32
+  board: esp32dev
+
+# Test external component from GitHub
+external_components:
+  - source: github://bytelink-ai/esphome-iwr6843@v1.0.0
+    components: [ iwr6843 ]
+
+wifi:
+  ssid: "!secret wifi_ssid"
+  password: "!secret wifi_password"
+  
+  ap:
+    ssid: "${friendly_name} Fallback"
+    password: "fallback12345"
+
+captive_portal:
+
+logger:
+  level: DEBUG
+  logs:
+    iwr6843: VERBOSE
+
+api:
+  encryption:
+    key: "your_api_encryption_key_here"
+
+ota:
+  password: "your_ota_password_here"
+
+# SPI Configuration for IWR6843
+spi:
+  clk_pin: GPIO18
+  miso_pin: GPIO19
+  mosi_pin: GPIO23
+
+# UART Configuration (for radar configuration commands)
+uart:
+  tx_pin: GPIO17
+  rx_pin: GPIO16
+  baud_rate: 115200
+
+# IWR6843 Radar Component
+iwr6843:
+  spi_id: spi_bus
+  cs_pin: GPIO5
+  sop2_pin: GPIO25  # Boot mode control
+  nrst_pin: GPIO26  # Hardware reset
+  
+  # Sensor Configuration
+  ceiling_height: 290  # cm
+  max_tracks: 5
+  
+  # Tracking Boundaries (meters)
+  tracking_boundary:
+    x_max: 4.0
+    x_min: -4.0
+    y_max: 4.0
+    y_min: -4.0
+    z_max: 3.0
+    z_min: -0.5
+  
+  # Presence Boundaries (meters)
+  presence_boundary:
+    x_max: 4.0
+    x_min: -4.0
+    y_max: 4.0
+    y_min: -4.0
+    z_max: 2.5
+    z_min: 0.5
+
+# Binary Sensors - Person 1 (minimal test)
+binary_sensor:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    sensor_type: presence
+    name: "Person 1 Presence"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    sensor_type: fall
+    name: "Person 1 Fall Detection"
+
+# Sensors - Person 1 Coordinates (minimal test)
+sensor:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    coordinate_type: x
+    name: "Person 1 X Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    coordinate_type: y
+    name: "Person 1 Y Coordinate"
+    unit_of_measurement: "cm"
+    
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    person_id: 1
+    coordinate_type: z
+    name: "Person 1 Z Coordinate"
+    unit_of_measurement: "cm"
+
+# Configuration Numbers (minimal test)
+number:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    number_type: ceiling_height
+    name: "Ceiling Height"
+    min_value: 100
+    max_value: 500
+    step: 10
+    unit_of_measurement: "cm"
+
+# Control Entities
+button:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    name: "Reset Sensor"
+
+switch:
+  - platform: iwr6843
+    iwr6843_id: iwr6843
+    name: "Flash Mode"
+
