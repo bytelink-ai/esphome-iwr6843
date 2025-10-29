@@ -5,16 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.5] - 2025-01-29
+## [1.0.6] - 2025-01-29
 
 ### Fixed
-- **SPI Read Method**: Fixed compilation error - `transfer()` is a protected method
-  - Changed from `this->transfer(0)` to `this->read_array(&byte, 1)`
-  - `read_array()` is the correct public method for reading bytes via SPI in ESPHome
-  - Component now compiles successfully
+- **Ambiguous read_array()**: Fixed final compilation error - `read_array()` exists in both SPIDevice and UARTDevice
+  - Added `spi_read_array_()` helper method that explicitly calls SPIDevice's read_array with full template parameters
+  - This definitively resolves the method ambiguity issue in dual-inheritance scenario
+  - Component now compiles successfully with ESP-IDF framework
 
-### Changed
-- All SPI read operations now use `read_array()` for byte-by-byte reads
+### Added
+- `spi_read_array_()` inline helper method to explicitly invoke SPI-specific read operations
+
+### Technical Implementation
+```cpp
+inline void spi_read_array_(uint8_t *data, size_t length) {
+  spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW,
+                 spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_2MHZ>::read_array(data, length);
+}
+```
+
+## [1.0.5] - 2025-01-29 [YANKED]
+
+### Fixed
+- **SPI Read Method**: Attempted fix but `read_array()` is also ambiguous
+
+### Note
+- This version was incomplete and superseded by v1.0.6
 
 ## [1.0.4] - 2025-01-29 [YANKED]
 
