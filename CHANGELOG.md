@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2025-01-29
+
+### Fixed
+- **Number Platform Schema**: Fixed invalid options error for `min_value`, `max_value`, and `step`
+  - Added `CONF_MIN_VALUE`, `CONF_MAX_VALUE`, `CONF_STEP` to schema imports
+  - Defined these parameters as optional config values in `CONFIG_SCHEMA`
+  - Updated `to_code()` to use proper constant names instead of strings
+  - Number entities now accept min/max/step configuration in YAML
+
+### Changed
+- Number platform now properly validates and accepts min_value, max_value, step parameters
+- Removed unused imports (CONF_MODE, UNIT_CENTIMETER, UNIT_METER)
+
 ## [1.0.7] - 2025-01-29
 
 ### Fixed
