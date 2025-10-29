@@ -285,7 +285,7 @@ bool IWR6843Component::find_magic_word_spi_() {
   
   // Search for magic word
   while (bytes_read < 128) {
-    this->read_array(&buffer[bytes_read], 1);  // Read 1 byte via SPI
+    this->spi_read_array_(&buffer[bytes_read], 1);  // Read 1 byte via SPI (explicit)
     bytes_read++;
     
     // Check if we found the magic word
@@ -321,7 +321,7 @@ bool IWR6843Component::read_frame_header_(FrameHeader &header) {
   
   for (size_t i = 0; i < bytes_needed; i++) {
     uint8_t byte;
-    this->read_array(&byte, 1);  // Read 1 byte via SPI
+    this->spi_read_array_(&byte, 1);  // Read 1 byte via SPI (explicit)
     this->spi_buffer_.push_back(byte);
   }
   
@@ -356,7 +356,7 @@ bool IWR6843Component::read_frame_data_(const FrameHeader &header) {
   
   for (size_t i = 0; i < remaining_bytes; i++) {
     uint8_t byte;
-    this->read_array(&byte, 1);  // Read 1 byte via SPI
+    this->spi_read_array_(&byte, 1);  // Read 1 byte via SPI (explicit)
     this->spi_buffer_.push_back(byte);
   }
   

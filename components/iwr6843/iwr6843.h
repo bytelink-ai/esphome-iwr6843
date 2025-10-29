@@ -164,6 +164,13 @@ class IWR6843Component : public Component, public spi::SPIDevice<spi::BIT_ORDER_
   // Helper functions
   uint8_t assign_display_id_(uint8_t radar_id);
   bool is_within_boundary_(float x, float y, float z, const BoundaryBox &box);
+  
+  // SPI helper to avoid ambiguity with UART methods
+  inline void spi_read_array_(uint8_t *data, size_t length) {
+    // Explicitly call SPIDevice's read_array via using declaration scope
+    spi::SPIDevice<spi::BIT_ORDER_MSB_FIRST, spi::CLOCK_POLARITY_LOW,
+                   spi::CLOCK_PHASE_LEADING, spi::DATA_RATE_2MHZ>::read_array(data, length);
+  }
 };
 
 }  // namespace iwr6843
