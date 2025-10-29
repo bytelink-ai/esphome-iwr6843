@@ -35,13 +35,27 @@ void IWR6843Component::setup() {
 }
 
 void IWR6843Component::loop() {
+  static uint32_t last_debug_time = 0;
+  uint32_t current_time = millis();
+  
+  // Debug: Log every 5 seconds if no data
+  if (current_time - last_debug_time > 5000) {
+    ESP_LOGD(TAG, "SPI Loop active, frame_count=%u, last_frame_time=%u ms ago", 
+             this->frame_count_, current_time - this->last_frame_time_);
+    last_debug_time = current_time;
+  }
+  
   // Read frame from SPI
   if (this->find_magic_word_spi_()) {
+    ESP_LOGD(TAG, "Magic word found!");
     FrameHeader header;
     if (this->read_frame_header_(header)) {
+      ESP_LOGD(TAG, "Frame header read: frame=%u, length=%u, tlvs=%u", 
+               header.frame_number, header.total_packet_len, header.num_tlvs);
       if (this->read_frame_data_(header)) {
         this->frame_count_++;
         this->update_sensors_();
+        ESP_LOGD(TAG, "Frame %u processed successfully", this->frame_count_);
         
         // Cleanup old tracks every 50 frames
         if (this->frame_count_ % 50 == 0) {
@@ -52,7 +66,6 @@ void IWR6843Component::loop() {
   }
 
   // Reset all tracks to 0 if no valid frames received for 2 seconds
-  uint32_t current_time = millis();
   if (current_time - this->last_frame_time_ > 2000) {
     for (auto &pair : this->tracks_) {
       this->reset_track_data_(pair.first);
@@ -276,6 +289,9 @@ void IWR6843Component::update_boundary_config_(const std::string &boundary_type)
 
 // SPI Frame Reading
 bool IWR6843Component::find_magic_word_spi_() {
+  static uint32_t last_log_time = 0;
+  static uint32_t attempt_count = 0;
+  
   // Read bytes and search for magic word
   uint8_t buffer[128];
   size_t bytes_read = 0;
@@ -304,6 +320,7 @@ bool IWR6843Component::find_magic_word_spi_() {
         for (size_t i = bytes_read - MAGIC_WORD_SIZE; i < bytes_read; i++) {
           this->spi_buffer_.push_back(buffer[i]);
         }
+        ESP_LOGV(TAG, "Magic word found after %u bytes", bytes_read);
         return true;
       }
     }
@@ -311,6 +328,20 @@ bool IWR6843Component::find_magic_word_spi_() {
   
   // Disable CS
   this->disable();
+  
+  // Debug logging every 10 seconds
+  attempt_count++;
+  uint32_t now = millis();
+  if (now - last_log_time > 10000) {
+    ESP_LOGW(TAG, "No magic word found in %u attempts (last 10s). First 16 bytes: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X",
+             attempt_count,
+             buffer[0], buffer[1], buffer[2], buffer[3],
+             buffer[4], buffer[5], buffer[6], buffer[7],
+             buffer[8], buffer[9], buffer[10], buffer[11],
+             buffer[12], buffer[13], buffer[14], buffer[15]);
+    last_log_time = now;
+    attempt_count = 0;
+  }
   
   return false;
 }
