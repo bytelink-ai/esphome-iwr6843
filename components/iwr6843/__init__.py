@@ -60,7 +60,6 @@ CONFIG_SCHEMA = (
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(IWR6843Component),
-            cv.Required(CONF_CS_PIN): pins.gpio_output_pin_schema,
             cv.Required(CONF_SOP2_PIN): pins.gpio_output_pin_schema,
             cv.Required(CONF_NRST_PIN): pins.gpio_output_pin_schema,
             cv.Optional(CONF_CEILING_HEIGHT, default=290): cv.int_range(
@@ -75,7 +74,7 @@ CONFIG_SCHEMA = (
         }
     )
     .extend(cv.COMPONENT_SCHEMA)
-    .extend(spi.spi_device_schema(cs_pin_required=False))
+    .extend(spi.spi_device_schema(cs_pin_required=True))
     .extend(uart.UART_DEVICE_SCHEMA)
 )
 
@@ -87,10 +86,7 @@ async def to_code(config):
     await spi.register_spi_device(var, config)
     await uart.register_uart_device(var, config)
 
-    # Setup pins
-    cs_pin = await cg.gpio_pin_expression(config[CONF_CS_PIN])
-    cg.add(var.set_cs_pin(cs_pin))
-
+    # Setup control pins (CS pin is handled by SPI device schema)
     sop2_pin = await cg.gpio_pin_expression(config[CONF_SOP2_PIN])
     cg.add(var.set_sop2_pin(sop2_pin))
 

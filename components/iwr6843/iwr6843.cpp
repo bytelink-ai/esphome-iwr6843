@@ -10,12 +10,8 @@ static const char *const TAG = "iwr6843";
 void IWR6843Component::setup() {
   ESP_LOGCONFIG(TAG, "Setting up IWR6843...");
 
-  // Initialize CS pin
-  if (this->cs_pin_ != nullptr) {
-    this->cs_pin_->setup();
-    this->cs_pin_->digital_write(true);  // CS high (inactive)
-  }
-
+  // CS pin is automatically handled by SPIDevice base class
+  
   // Initialize SOP2 pin (functional mode)
   if (this->sop2_pin_ != nullptr) {
     this->sop2_pin_->setup();
@@ -284,10 +280,8 @@ bool IWR6843Component::find_magic_word_spi_() {
   uint8_t buffer[128];
   size_t bytes_read = 0;
   
-  // Enable CS
-  if (this->cs_pin_ != nullptr) {
-    this->cs_pin_->digital_write(false);
-  }
+  // CS is automatically handled by SPIDevice::enable() and disable()
+  this->enable();
   
   // Search for magic word
   while (bytes_read < 128) {
@@ -316,9 +310,7 @@ bool IWR6843Component::find_magic_word_spi_() {
   }
   
   // Disable CS
-  if (this->cs_pin_ != nullptr) {
-    this->cs_pin_->digital_write(true);
-  }
+  this->disable();
   
   return false;
 }
@@ -369,9 +361,7 @@ bool IWR6843Component::read_frame_data_(const FrameHeader &header) {
   }
   
   // Disable CS
-  if (this->cs_pin_ != nullptr) {
-    this->cs_pin_->digital_write(true);
-  }
+  this->disable();
   
   // Parse TLV data
   bool success = this->parse_tlv_data_(&this->spi_buffer_[FRAME_HEADER_SIZE], remaining_bytes);

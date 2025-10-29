@@ -86,7 +86,6 @@ class IWR6843Component : public Component, public spi::SPIDevice<spi::BIT_ORDER_
   float get_setup_priority() const override { return setup_priority::DATA; }
 
   // Pin configuration
-  void set_cs_pin(GPIOPin *pin) { this->cs_pin_ = pin; }
   void set_sop2_pin(GPIOPin *pin) { this->sop2_pin_ = pin; }
   void set_nrst_pin(GPIOPin *pin) { this->nrst_pin_ = pin; }
 
@@ -113,8 +112,7 @@ class IWR6843Component : public Component, public spi::SPIDevice<spi::BIT_ORDER_
   void send_config_update(const std::string &command);
 
  protected:
-  // Hardware pins
-  GPIOPin *cs_pin_{nullptr};
+  // Hardware pins (CS pin is managed by SPIDevice base class)
   GPIOPin *sop2_pin_{nullptr};
   GPIOPin *nrst_pin_{nullptr};
 
