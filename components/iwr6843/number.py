@@ -7,7 +7,6 @@ from esphome.const import (
     CONF_MODE,
     UNIT_CENTIMETER,
     UNIT_METER,
-    ICON_RULER,
 )
 from . import IWR6843Component, CONF_IWR6843_ID, iwr6843_ns
 
@@ -36,7 +35,7 @@ NUMBER_TYPES = {
     "presence_boundary_z_min": NumberType.PRESENCE_BOUNDARY_Z_MIN,
 }
 
-CONFIG_SCHEMA = number.number_schema(IWR6843Number, icon=ICON_RULER).extend(
+CONFIG_SCHEMA = number.number_schema(IWR6843Number, icon="mdi:ruler").extend(
     {
         cv.GenerateID(CONF_IWR6843_ID): cv.use_id(IWR6843Component),
         cv.Required(CONF_NUMBER_TYPE): cv.enum(NUMBER_TYPES, lower=True),

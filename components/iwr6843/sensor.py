@@ -6,9 +6,6 @@ from esphome.const import (
     CONF_ID,
     STATE_CLASS_MEASUREMENT,
     UNIT_CENTIMETER,
-    UNIT_MILLIMETER_PER_SECOND,
-    ICON_RULER,
-    ICON_SPEEDOMETER,
 )
 from . import IWR6843Component, CONF_IWR6843_ID, iwr6843_ns
 
@@ -26,7 +23,7 @@ COORDINATE_TYPES = {
 
 CONFIG_SCHEMA = sensor.sensor_schema(
     unit_of_measurement=UNIT_CENTIMETER,
-    icon=ICON_RULER,
+    icon="mdi:ruler",
     accuracy_decimals=2,
     state_class=STATE_CLASS_MEASUREMENT,
 ).extend(
