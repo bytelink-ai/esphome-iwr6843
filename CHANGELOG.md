@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-01-29
+
+### Fixed
+- **Duplicate Pin Registration**: Fixed "ID esp32_esp32internalgpiopin_id_X is already registered" error
+  - Removed manual CS pin registration from component schema
+  - CS pin is now handled automatically by `SPIDevice` base class via `spi_device_schema(cs_pin_required=True)`
+  - Replaced manual `cs_pin_->digital_write()` calls with `enable()` and `disable()` methods
+- Component now properly inherits CS pin management from ESPHome SPI framework
+
+### Changed
+- CS pin must now be specified in standard SPI device format (handled by `spi_device_schema`)
+- Removed `set_cs_pin()` method (no longer needed)
+
 ## [1.0.1] - 2025-01-29
 
 ### Fixed
