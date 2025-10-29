@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-01-29
+
+### Fixed
+- **ESPHome 2025.x Compatibility**: Removed non-existent constants from `esphome.const`:
+  - `ICON_RESTART`, `ICON_FLASH`, `ICON_RULER`, `ICON_SPEEDOMETER`, `ICON_ACCOUNT`, `ICON_ALERT_CIRCLE`
+  - `UNIT_MILLIMETER_PER_SECOND`
+- Replaced icon constants with direct MDI strings (e.g., `"mdi:restart"`, `"mdi:ruler"`)
+- Component now compatible with ESPHome 2025.10.3 and later
+
+### Changed
+- Icons are now specified as strings instead of constants
+
 ## [1.0.0] - 2025-01-29
 
 ### Added
