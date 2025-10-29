@@ -4,16 +4,15 @@ import esphome.config_validation as cv
 from esphome.components import number
 from esphome.const import (
     CONF_ID,
-    CONF_MODE,
-    UNIT_CENTIMETER,
-    UNIT_METER,
+    CONF_MIN_VALUE,
+    CONF_MAX_VALUE,
+    CONF_STEP,
 )
 from . import IWR6843Component, CONF_IWR6843_ID, iwr6843_ns
 
 DEPENDENCIES = ["iwr6843"]
 
 CONF_NUMBER_TYPE = "number_type"
-CONF_BOUNDARY_TYPE = "boundary_type"
 
 IWR6843Number = iwr6843_ns.class_("IWR6843Number", number.Number, cg.Component)
 
@@ -39,6 +38,9 @@ CONFIG_SCHEMA = number.number_schema(IWR6843Number, icon="mdi:ruler").extend(
     {
         cv.GenerateID(CONF_IWR6843_ID): cv.use_id(IWR6843Component),
         cv.Required(CONF_NUMBER_TYPE): cv.enum(NUMBER_TYPES, lower=True),
+        cv.Optional(CONF_MIN_VALUE, default=0.0): cv.float_,
+        cv.Optional(CONF_MAX_VALUE, default=100.0): cv.float_,
+        cv.Optional(CONF_STEP, default=1.0): cv.float_,
     }
 )
 
@@ -47,13 +49,10 @@ async def to_code(config):
     """Generate number code"""
     parent = await cg.get_variable(config[CONF_IWR6843_ID])
     num = cg.new_Pvariable(config[CONF_ID])
-    await number.register_number(
-        num,
-        config,
-        min_value=config.get("min_value", 0),
-        max_value=config.get("max_value", 100),
-        step=config.get("step", 1),
-    )
+    await number.register_number(num, config,
+                                  min_value=config[CONF_MIN_VALUE],
+                                  max_value=config[CONF_MAX_VALUE],
+                                  step=config[CONF_STEP])
     await cg.register_component(num, config)
     
     cg.add(num.set_parent(parent))
