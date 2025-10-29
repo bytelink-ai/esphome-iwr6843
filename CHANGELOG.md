@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.10] - 2025-01-29
+
+### Fixed
+- **CRITICAL: SPI Initialization Missing**: Added missing `spi_setup()` call in `setup()`
+  - Error: `SPIDevice not initialised - did you call spi_setup()?`
+  - Root cause: SPIDevice base class requires explicit `spi_setup()` call before use
+  - **This was preventing ALL SPI communication from working**
+  - Added detailed logging for SOP2 and NRST pin initialization
+
+### Impact
+- Without this fix, the component would throw SPI errors and receive no data
+- This explains why all sensors showed "off" despite UART showing data
+- **All users must update to this version for SPI functionality**
+
+## [1.0.9] - 2025-01-29
+
+### Added
+- **Debug Logging**: Comprehensive debug output for SPI troubleshooting
+  - Loop status every 5 seconds (frame count, last frame time)
+  - Magic word search attempts logged every 10 seconds with first 16 bytes
+  - Frame processing success messages with frame number and TLV count
+  - Helps diagnose SPI communication issues
+
 ## [1.0.8] - 2025-01-29
 
 ### Fixed
