@@ -5,16 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.4] - 2025-01-29
+## [1.0.5] - 2025-01-29
 
 ### Fixed
-- **SPI Template Method Usage**: Fixed compilation error when calling `SPIDevice::read_byte()`
-  - `SPIDevice` is a template class and cannot be called directly without template parameters
-  - Changed from `spi::SPIDevice::read_byte()` to `this->transfer(0)`
-  - `transfer()` method is the correct way to read bytes via SPI in ESPHome
+- **SPI Read Method**: Fixed compilation error - `transfer()` is a protected method
+  - Changed from `this->transfer(0)` to `this->read_array(&byte, 1)`
+  - `read_array()` is the correct public method for reading bytes via SPI in ESPHome
+  - Component now compiles successfully
 
 ### Changed
-- All SPI read operations now use `transfer(0)` instead of template-specific method calls
+- All SPI read operations now use `read_array()` for byte-by-byte reads
+
+## [1.0.4] - 2025-01-29 [YANKED]
+
+### Fixed
+- **SPI Template Method Usage**: Attempted fix but used incorrect method
+  - Used `this->transfer(0)` which is protected
+
+### Note
+- This version was incomplete and superseded by v1.0.5
 
 ## [1.0.3] - 2025-01-29
 
