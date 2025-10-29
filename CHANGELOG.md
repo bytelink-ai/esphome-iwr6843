@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-01-29
+
+### Fixed
+- **Ambiguous Method Calls**: Fixed compilation error due to dual inheritance from `SPIDevice` and `UARTDevice`
+  - Both classes have `read_byte()` and `write_byte()` methods with different signatures
+  - Now explicitly specify which class method to use:
+    - `uart::UARTDevice::write_byte()` for UART communication
+    - `spi::SPIDevice::read_byte()` for SPI communication
+- Component now compiles successfully with ESP-IDF framework
+
+### Technical Details
+- The component inherits from both `SPIDevice` and `UARTDevice` to support dual interfaces
+- C++ requires explicit namespace resolution when method names conflict across inherited classes
+
 ## [1.0.2] - 2025-01-29
 
 ### Fixed
