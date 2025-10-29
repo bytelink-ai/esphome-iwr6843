@@ -6,8 +6,6 @@ from esphome.const import (
     CONF_ID,
     DEVICE_CLASS_OCCUPANCY,
     DEVICE_CLASS_SAFETY,
-    ICON_ACCOUNT,
-    ICON_ALERT_CIRCLE,
 )
 from . import IWR6843Component, CONF_IWR6843_ID
 

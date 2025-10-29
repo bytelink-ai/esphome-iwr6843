@@ -31,6 +31,14 @@ enum TLVType {
   TLVTYPE_COMPRESSED_SPHERICAL_POINTS = 9
 };
 
+// Coordinate Type for Sensor Platform
+enum CoordinateType {
+  X_COORDINATE = 0,
+  Y_COORDINATE = 1,
+  Z_COORDINATE = 2,
+  VELOCITY = 3
+};
+
 // Frame Header Structure
 struct FrameHeader {
   uint64_t magic_word;

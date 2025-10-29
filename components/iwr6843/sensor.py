@@ -19,6 +19,7 @@ COORDINATE_TYPES = {
     "x": CoordinateType.X_COORDINATE,
     "y": CoordinateType.Y_COORDINATE,
     "z": CoordinateType.Z_COORDINATE,
+    "velocity": CoordinateType.VELOCITY,
 }
 
 CONFIG_SCHEMA = sensor.sensor_schema(
@@ -51,4 +52,6 @@ async def to_code(config):
         cg.add(parent.register_y_coordinate_sensor(person_id, sens))
     elif coord_type == "z":
         cg.add(parent.register_z_coordinate_sensor(person_id, sens))
+    elif coord_type == "velocity":
+        cg.add(parent.register_velocity_sensor(person_id, sens))
 
